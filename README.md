@@ -1,50 +1,111 @@
-# Welcome to your Expo app 👋
+# Application de Gestion des Tâches
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Une application complète de gestion des tâches développée avec React Native (frontend) et Express.js (backend).
 
-## Get started
+## Structure du Projet
 
-1. Install dependencies
+Le projet est divisé en deux parties principales :
 
-   ```bash
-   npm install
-   ```
+- **Todo-App** : Application frontend développée avec React Native et Expo
+- **Server** : API backend développée avec Express.js et Sequelize ORM
 
-2. Start the app
+## Fonctionnalités
 
-   ```bash
-   npx expo start
-   ```
+- Tableau de bord avec statistiques
+- Gestion du personnel (liste, détails, création, modification, suppression)
+- Gestion des tâches (liste, détails, création, modification, suppression)
+- Filtrage des tâches par statut et par personnel
+- Marquage des tâches comme terminées
 
-In the output, you'll find options to open the app in a
+## Prérequis
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Node.js (v14 ou supérieur)
+- npm ou yarn
+- Expo CLI
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Installation
 
-## Get a fresh project
-
-When you're ready, run:
+### Backend (Server)
 
 ```bash
-npm run reset-project
+# Se positionner dans le dossier du serveur
+cd Server
+
+# Installer les dépendances
+npm install
+
+# Initialiser la base de données (création des tables et données de test)
+npm run db:init
+
+# Démarrer le serveur
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Le serveur sera accessible à l'adresse : http://localhost:8080
 
-## Learn more
+### Frontend (Todo-App)
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+# Se positionner dans le dossier de l'application
+cd Todo-App
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Installer les dépendances
+npm install
 
-## Join the community
+# Démarrer l'application
+npm start
+```
 
-Join our community of developers creating universal apps.
+Suivez les instructions dans le terminal pour ouvrir l'application sur un émulateur ou un appareil physique.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Structure de l'Application Frontend
+
+- **/app** : Contient les écrans principaux de l'application
+  - **/app/(tabs)** : Écrans accessibles via la barre de navigation
+  - **/app/personnel** : Écrans de gestion du personnel
+  - **/app/tasks** : Écrans de gestion des tâches
+- **/components** : Composants réutilisables
+- **/hooks** : Hooks personnalisés, y compris l'API client
+- **/assets** : Ressources statiques (images, polices, etc.)
+
+## Structure du Backend
+
+- **/app/models** : Modèles de données Sequelize
+- **/app/controllers** : Contrôleurs pour les opérations CRUD
+- **/app/routes** : Définition des routes API
+- **/app/seeders** : Données initiales pour la base de données
+
+## API Endpoints
+
+### Personnel
+
+- `GET /api/personnels` : Liste de tout le personnel
+- `GET /api/personnels/:id` : Détails d'un membre du personnel
+- `POST /api/personnels` : Créer un nouveau membre du personnel
+- `PUT /api/personnels/:id` : Mettre à jour un membre du personnel
+- `DELETE /api/personnels/:id` : Supprimer un membre du personnel
+
+### Tâches
+
+- `GET /api/tasks` : Liste de toutes les tâches
+- `GET /api/tasks/:id` : Détails d'une tâche
+- `GET /api/tasks/personnel/:personnelId` : Tâches d'un membre du personnel
+- `POST /api/tasks` : Créer une nouvelle tâche
+- `PUT /api/tasks/:id` : Mettre à jour une tâche
+- `PUT /api/tasks/:id/toggle` : Basculer l'état de réalisation d'une tâche
+- `DELETE /api/tasks/:id` : Supprimer une tâche
+
+## Technologies Utilisées
+
+### Frontend
+- React Native
+- Expo
+- Tailwind CSS (via NativeWind)
+- React Navigation
+- TypeScript
+
+### Backend
+- Express.js
+- Sequelize ORM
+- SQLite (développement)
+- Node.js

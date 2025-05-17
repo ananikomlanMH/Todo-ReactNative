@@ -1,75 +1,206 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import TaskCard from '../../components/tasks/TaskCard';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import { personnelApi, taskApi } from '../../utils/api';
+import { Task } from '../../utils/types';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalPersonnel: 0,
+    totalTasks: 0,
+    completedTasks: 0,
+    pendingTasks: 0
+  });
+  const [recentTasks, setRecentTasks] = useState<Task[]>([]);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    setLoading(true);
+    try {
+      // Charger les données du personnel
+      const personnelData = await personnelApi.getAll();
+            
+      // Charger toutes les tâches
+      const tasksData = await taskApi.getAll();
+      
+      // Calculer les statistiques
+      const completedTasks = tasksData.filter(task => task.realisee);
+      const pendingTasks = tasksData.filter(task => !task.realisee);
+      
+      setStats({
+        totalPersonnel: personnelData.length,
+        totalTasks: tasksData.length,
+        completedTasks: completedTasks.length,
+        pendingTasks: pendingTasks.length
+      });
+      
+      // Récupérer les 5 tâches les plus récentes
+      const sortedTasks = [...tasksData].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      ).slice(0, 5);
+      
+      setRecentTasks(sortedTasks);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données du tableau de bord:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const StatCard = ({ title, value, icon, color, onPress }) => (
+    <TouchableOpacity 
+      className={`bg-white rounded-md p-5 flex-1 min-w-[45%] border border-gray-100`}
+      onPress={onPress}
+      activeOpacity={0.7}
+      style={{ elevation: 3 }}
+    >
+      <View className="flex-row items-center justify-between mb-2">
+        <View className={`h-12 w-12 rounded-full ${color} items-center justify-center shadow-sm`}>
+          <Ionicons name={icon} size={22} color="white" />
+        </View>
+        <Text className="font-rubik-bold text-3xl text-gray-800">{value}</Text>
+      </View>
+      <Text className="font-rubik-medium text-gray-600 mt-2">{title}</Text>
+    </TouchableOpacity>
+  );
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-background">
+        <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
+        <ActivityIndicator size="large" color="#4F46E5" />
+        <Text className="font-rubik-medium mt-4 text-text-secondary">Chargement du tableau de bord...</Text>
+      </View>
+    );
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View className="flex-1 bg-white">
+      <ScrollView className="flex-1">
+        {/* En-tête avec dégradé - sans AppBar car géré par la navigation */}
+        <View className="bg-primary pt-5 pb-6 shadow-md">
+          <View className="px-6">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="font-rubik-bold text-2xl text-white">Tableau de bord</Text>
+              <View className="flex-row">
+                <TouchableOpacity 
+                  className="h-10 w-10 rounded-full bg-white/20 items-center justify-center mr-2"
+                  onPress={() => alert('Les paramètres ne sont pas disponibles pour le moment.\nIls seront ajoutés dans une prochaine mise à jour.\n\nBy Anani Komlan')}
+                >
+                  <Ionicons name="settings-outline" size={20} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  className="h-10 w-10 rounded-full bg-white/20 items-center justify-center"
+                  onPress={() => router.push('/personnel')}
+                >
+                  <Ionicons name="person" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+            
+            <View className="bg-white/10 p-4 rounded-xl mb-2">
+              <View className="flex-row justify-between">
+                <View>
+                  <Text className="font-rubik text-white/70 text-sm">Tâches terminées</Text>
+                  <Text className="font-rubik-bold text-white text-2xl">
+                    {stats.completedTasks}/{stats.totalTasks}
+                  </Text>
+                </View>
+                <View className="h-12 w-12 rounded-full bg-white/20 items-center justify-center">
+                  <Ionicons name="checkmark-circle" size={24} color="white" />
+                </View>
+              </View>
+              
+              {/* Barre de progression */}
+              <View className="h-2 bg-white/20 rounded-full mt-4 overflow-hidden">
+                <View 
+                  className="h-full bg-white" 
+                  style={{ width: `${stats.totalTasks > 0 ? (stats.completedTasks / stats.totalTasks) * 100 : 0}%` }} 
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      
+        <View className="px-5 pt-6">
+          {/* Statistiques */}
+          <View className="flex-row flex-wrap justify-between gap-4 mb-8">
+            <StatCard 
+              title="Personnel" 
+              value={stats.totalPersonnel} 
+              icon="people" 
+              color="bg-primary" 
+              onPress={() => router.push('/personnel')}
+            />
+            <StatCard 
+              title="Tâches totales" 
+              value={stats.totalTasks} 
+              icon="list" 
+              color="bg-secondary" 
+              onPress={() => router.push('/tasks')}
+            />
+            <StatCard 
+              title="Tâches en attente" 
+              value={stats.pendingTasks} 
+              icon="time" 
+              color="bg-accent" 
+              onPress={() => router.push('/tasks?filter=pending')}
+            />
+          </View>
+          
+          {/* Tâches récentes */}
+          <View className="mb-6">
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="font-rubik-medium text-xl text-text">Tâches récentes</Text>
+              <TouchableOpacity 
+                className="flex-row items-center" 
+                onPress={() => router.push('/tasks')}
+              >
+                <Text className="font-rubik text-primary mr-1">Voir tout</Text>
+                <Ionicons name="chevron-forward" size={16} color="#4F46E5" />
+              </TouchableOpacity>
+            </View>
+            
+            {recentTasks.length > 0 ? (
+              recentTasks.map((task: Task) => (
+                <TaskCard 
+                  key={task.id} 
+                  task={task} 
+                  onUpdate={loadDashboardData} 
+                />
+              ))
+            ) : (
+              <Card>
+                <View className="items-center py-8">
+                  <Ionicons name="document-outline" size={48} color="#9CA3AF" />
+                  <Text className="font-rubik text-text-secondary text-center mt-4">
+                    Aucune tâche disponible
+                  </Text>
+                  <Button 
+                    title="Créer une tâche" 
+                    onPress={() => router.push('/tasks/new')} 
+                    variant="primary"
+                    size="small"
+                    icon="add"
+                    iconPosition="left"
+                    rounded={true}
+                    className="mt-4"
+                  />
+                </View>
+              </Card>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

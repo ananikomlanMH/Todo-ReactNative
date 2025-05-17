@@ -1,0 +1,19 @@
+// Types pour les icônes Ionicons utilisées dans l'application
+export type IoniconsName = 
+  | 'add' | 'remove' | 'close' | 'checkmark' | 'menu' | 'search' 
+  | 'arrow-back' | 'arrow-forward' | 'arrow-up' | 'arrow-down' 
+  | 'chevron-back' | 'chevron-forward' | 'chevron-up' | 'chevron-down' 
+  | 'calendar' | 'time' | 'person' | 'people' | 'mail' | 'call' 
+  | 'settings' | 'home' | 'heart' | 'star' | 'trash' | 'list' 
+  | 'alert' | 'information' | 'help' | 'refresh' | 'save' 
+  | 'create' | 'edit' | 'share' | 'download' | 'upload' 
+  | 'cloud' | 'camera' | 'image' | 'bookmark' | 'flag' 
+  | 'pin' | 'location' | 'navigate' | 'chatbox' | 'chatbubble' 
+  | 'notifications' | 'warning' | 'checkmark-circle' | 'close-circle' 
+  | 'alert-circle' | 'information-circle' | 'help-circle' 
+  | 'add-circle' | 'remove-circle' | 'eye' | 'eye-off' 
+  | 'lock' | 'unlock' | 'key' | 'link' | 'attach' | 'copy' 
+  | 'cut' | 'clipboard' | 'document' | 'folder' | 'funnel' 
+  | 'options' | 'more' | 'ellipsis-vertical' | 'ellipsis-horizontal' 
+  | 'calendar-outline' | 'person-outline' | 'people-outline' 
+  | 'time-outline' | 'alarm-outline';
