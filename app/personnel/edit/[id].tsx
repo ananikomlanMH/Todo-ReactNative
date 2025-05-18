@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Text, View } from 'react-native';
 import PersonnelForm from '../../../components/personnel/PersonnelForm';
 import { personnelApi } from '../../../utils/api';
@@ -11,13 +11,9 @@ export default function EditPersonnel() {
   const [loading, setLoading] = useState(true);
   const [personnel, setPersonnel] = useState<Personnel | null>(null);
 
-  useEffect(() => {
-    loadPersonnel();
-  }, [id]);
-
-  const loadPersonnel = async () => {
+  const loadPersonnel = useCallback(async () => {
     if (!id) return;
-    
+
     setLoading(true);
     try {
       const data = await personnelApi.getById(parseInt(id));
@@ -29,7 +25,11 @@ export default function EditPersonnel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, router]);
+
+  useEffect(() => {
+    loadPersonnel();
+  }, [loadPersonnel]);
 
   if (loading) {
     return (
@@ -47,7 +47,7 @@ export default function EditPersonnel() {
           Personnel non trouvé
         </Text>
         <Text className="font-rubik text-gray-600 text-center mb-6">
-          Le membre du personnel que vous souhaitez modifier n'existe pas ou a été supprimé.
+          Le membre du personnel que vous souhaitez modifier n&apos;existe pas ou a été supprimé.
         </Text>
       </View>
     );

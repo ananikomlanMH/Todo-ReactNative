@@ -35,8 +35,7 @@ export default function TasksLayout() {
                         const HeaderContent = () => {
                             const router = useRouter();
                             const [task, setTask] = useState<Task | null>(null);
-                            const [deleting, setDeleting] = useState(false);
-                            const [completing, setCompleting] = useState(false);
+                            const [, setDeleting] = useState(false);
                             const [showDeleteModal, setShowDeleteModal] = useState(false);
 
                             useEffect(() => {
@@ -52,7 +51,7 @@ export default function TasksLayout() {
 
                                     fetchTask();
                                 }
-                            }, [id]);
+                            }, []);
 
                             const handleDelete = () => {
                                 if (!task) return;
@@ -153,7 +152,7 @@ export default function TasksLayout() {
 
                                     fetchTask();
                                 }
-                            }, [id]);
+                            }, []);
 
                             const title = task ? `Modifier: ${task.titre}` : "Modifier la tâche";
                             return <AppBar title={title}/>;

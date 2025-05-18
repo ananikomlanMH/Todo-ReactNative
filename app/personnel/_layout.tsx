@@ -1,11 +1,11 @@
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import DropdownMenu from "../../components/ui/DropdownMenu";
-import { personnelApi } from "../../utils/api";
-import { Personnel } from "../../utils/types";
 import { AppBar } from "../../components/ui/AppBar";
 import ConfirmationModal from "../../components/ui/ConfirmationModal";
+import DropdownMenu, {DropdownMenuItem} from "../../components/ui/DropdownMenu";
+import { personnelApi } from "../../utils/api";
+import { Personnel } from "../../utils/types";
 
 export default function PersonnelLayout() {
   return (
@@ -35,7 +35,7 @@ export default function PersonnelLayout() {
             const HeaderContent = () => {
               const router = useRouter();
               const [personnel, setPersonnel] = useState<Personnel | null>(null);
-              const [deleting, setDeleting] = useState(false);
+              const [, setDeleting] = useState(false);
               const [showDeleteModal, setShowDeleteModal] = useState(false);
 
               useEffect(() => {
@@ -51,7 +51,7 @@ export default function PersonnelLayout() {
 
                   fetchPersonnel();
                 }
-              }, [id]);
+              }, []);
 
               const handleDelete = () => {
                 if (!personnel) return;
@@ -76,7 +76,12 @@ export default function PersonnelLayout() {
 
               const title = personnel ? `${personnel.prenom} ${personnel.nom}` : "Détails du personnel";
 
-              const dropdownItems = personnel ? [
+              const dropdownItems: DropdownMenuItem[] = personnel ? [
+                {
+                  label: 'Nouvelle tâche',
+                  icon: 'add',
+                  onPress: () => router.push(`/tasks/new?personnelId=${personnel.id}`)
+                },
                 {
                   label: 'Modifier',
                   icon: 'create-outline',
@@ -150,7 +155,7 @@ export default function PersonnelLayout() {
 
                   fetchPersonnel();
                 }
-              }, [id]);
+              }, []);
 
               const title = personnel ? `Modifier: ${personnel.prenom} ${personnel.nom}` : "Modifier personnel";
               return <AppBar title={title} />;

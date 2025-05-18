@@ -27,7 +27,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [personnels, setPersonnels] = useState<Personnel[]>([]);
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [formData, setFormData] = useState<Task>({
     titre: '',
     description: '',

@@ -5,7 +5,6 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { taskApi } from '../../utils/api';
 import { Task } from '../../utils/types';
-import Badge from '../ui/Badge';
 
 interface TaskCardProps {
   task: Task;
@@ -30,18 +29,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
     }
   };
 
-  const getPriorityBadge = () => {
-    switch (task.priorite) {
-      case 'haute':
-        return <Badge text="Haute" variant="danger" />;
-      case 'moyenne':
-        return <Badge text="Moyenne" variant="warning" />;
-      case 'basse':
-        return <Badge text="Basse" variant="info" />;
-      default:
-        return null;
-    }
-  };
 
   const getPriorityColor = () => {
     switch (task.priorite) {
@@ -56,20 +43,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
     }
   };
 
-  const getStatusBadge = () => {
-    if (task.realisee) {
-      return <Badge text="Terminée" variant="success" />;
-    }
-
-    switch (task.statut) {
-      case 'en cours':
-        return <Badge text="En cours" variant="info" />;
-      case 'à faire':
-        return <Badge text="À faire" variant="warning" />;
-      default:
-        return null;
-    }
-  };
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Non définie';

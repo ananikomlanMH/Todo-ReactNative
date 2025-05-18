@@ -13,7 +13,6 @@ export default function TaskDetails() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [task, setTask] = useState<Task | null>(null);
-    const [deleting, setDeleting] = useState(false);
     const [completing, setCompleting] = useState(false);
 
     const loadTask = useCallback(async () => {
@@ -42,38 +41,6 @@ export default function TaskDetails() {
         }, [loadTask])
     );
 
-    // Cette fonction est actuellement non utilisée dans ce composant
-    // Elle pourrait être utilisée pour ajouter un bouton de suppression dans l'interface
-    // ou être déplacée vers un composant parent qui gère les actions sur les tâches
-    const handleDelete = async () => {
-        if (!task) return;
-
-        Alert.alert(
-            'Confirmation',
-            `Êtes-vous sûr de vouloir supprimer la tâche "${task.titre}" ?`,
-            [
-                { text: 'Annuler', style: 'cancel' },
-                {
-                    text: 'Supprimer',
-                    style: 'destructive',
-                    onPress: async () => {
-                        if (!id) return;
-                        setDeleting(true);
-                        try {
-                            await taskApi.delete(parseInt(id));
-                            Alert.alert('Succès', 'La tâche a été supprimée avec succès');
-                            router.back();
-                        } catch (error) {
-                            console.error('Erreur lors de la suppression de la tâche:', error);
-                            Alert.alert('Erreur', 'Impossible de supprimer la tâche');
-                        } finally {
-                            setDeleting(false);
-                        }
-                    }
-                }
-            ]
-        );
-    };
 
     const handleMarkCompleted = async () => {
         if (!task || task.realisee || !id) return;

@@ -13,12 +13,14 @@ export default function TaskList() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [personnel, setPersonnel] = useState<Personnel[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<TaskFilter>(
     params.filter === 'completed' ? 'completed' : 
     params.filter === 'pending' ? 'pending' : 'all'
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedPersonnelId, setSelectedPersonnelId] = useState<number | null>(null);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
 
@@ -33,26 +35,7 @@ export default function TaskList() {
     }, [])
   );
 
-  useEffect(() => {
-    filterTasks();
-  }, [searchQuery, filter, selectedPersonnelId, tasks]);
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const tasksData = await taskApi.getAll();
-      setTasks(tasksData);
-      const personnelData = await personnelApi.getAll();
-      setPersonnel(personnelData);
-    } catch (error) {
-      console.error('Erreur lors du chargement des données:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  const filterTasks = () => {
+  const filterTasks = useCallback(() => {
     let filtered = [...tasks];
 
     // Application du filtre de statut (terminée/en cours)
@@ -78,7 +61,27 @@ export default function TaskList() {
     }
 
     setFilteredTasks(filtered);
+  }, [searchQuery, filter, selectedPersonnelId, tasks]);
+
+  useEffect(() => {
+    filterTasks();
+  }, [filterTasks]);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const tasksData = await taskApi.getAll();
+      setTasks(tasksData);
+      const personnelData = await personnelApi.getAll();
+      setPersonnel(personnelData);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
   };
+
 
   const handleRefresh = () => {
     setRefreshing(true);

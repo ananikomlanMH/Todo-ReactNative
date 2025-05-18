@@ -42,9 +42,6 @@ const Badge: React.FC<BadgeProps> = ({
     }
   };
 
-  const getSize = () => {
-    return size === 'small' ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm';
-  };
 
   return (
     <View className={`rounded-full ${getBackgroundColor()} ${size === 'small' ? 'px-2 py-0.5' : 'px-3 py-1'}`}>

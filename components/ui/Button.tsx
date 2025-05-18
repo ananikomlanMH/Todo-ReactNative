@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { IoniconsName } from '../../utils/iconTypes';
 
@@ -61,14 +61,14 @@ const Button: React.FC<ButtonProps> = ({
    */
   const getButtonClass = () => {
     let baseClass = 'flex flex-row justify-center items-center';
-    
+
     // Border radius
     if (rounded) {
       baseClass += ' rounded-full';
     } else {
       baseClass += ' rounded-xl';
     }
-    
+
     // Variant classes
     if (outline) {
       baseClass += ' border-2';
@@ -124,7 +124,7 @@ const Button: React.FC<ButtonProps> = ({
           baseClass += ' bg-gray-200';
       }
     }
-    
+
     // Size classes
     if (size === 'small') {
       baseClass += ' px-3 py-1.5';
@@ -133,32 +133,32 @@ const Button: React.FC<ButtonProps> = ({
     } else if (size === 'large') {
       baseClass += ' px-6 py-3.5';
     }
-    
+
     // Width class
     if (fullWidth) {
       baseClass += ' w-full';
     }
-    
+
     // Elevation
     if (elevated && !outline && !disabled) {
       baseClass += ' shadow-md';
     }
-    
+
     // Disabled class
     if (disabled) {
       baseClass += ' opacity-50';
     }
-    
+
     return baseClass;
   };
-  
+
   /**
    * Génère les classes Tailwind pour le style du texte
    * @returns {string} Classes Tailwind combinées
    */
   const getTextClass = () => {
     let textClass = 'font-rubik-medium text-center';
-    
+
     // Variant text color
     if (outline) {
       switch (variant) {
@@ -194,7 +194,7 @@ const Button: React.FC<ButtonProps> = ({
         textClass += ' text-gray-800';
       }
     }
-    
+
     // Size text
     if (size === 'small') {
       textClass += ' text-sm';
@@ -203,10 +203,10 @@ const Button: React.FC<ButtonProps> = ({
     } else if (size === 'large') {
       textClass += ' text-lg';
     }
-    
+
     return textClass;
   };
-  
+
   /**
    * Détermine la taille de l'icône en fonction de la taille du bouton
    * @returns {number} Taille de l'icône en pixels
@@ -216,7 +216,7 @@ const Button: React.FC<ButtonProps> = ({
     if (size === 'medium') return 18;
     return 20; // large
   };
-  
+
   /**
    * Détermine la couleur de l'icône en fonction de la variante et du style
    * @returns {string} Code couleur hexadécimal
