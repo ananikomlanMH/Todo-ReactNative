@@ -82,8 +82,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     }
 
     if (!formData.dateEcheance) {
-      newErrors.dateEcheance = 'Veuillez sélectionner une date d\'echeance';
+      newErrors.dateEcheance = "Veuillez sélectionner une date d'échéance";
+    } else if (!/^\d{4}-\d{2}-\d{2}$/.test(formData.dateEcheance)) {
+      newErrors.dateEcheance = "La date doit être au format AAAA-MM-JJ";
     }
+
 
     if (!formData.personnelId) {
       newErrors.personnelId = 'Veuillez sélectionner un membre du personnel';
@@ -169,7 +172,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
       />
 
       <FormField
-        label="Date d'échéance"
+        label="Date d'échéance (YYYY-MM-DD)"
         value={formData.dateEcheance}
         onChangeText={(value) => handleChange('dateEcheance', value)}
         placeholder="Sélectionner une date d'échéance"
