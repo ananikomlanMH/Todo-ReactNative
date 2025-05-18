@@ -109,3 +109,13 @@ Suivez les instructions dans le terminal pour ouvrir l'application sur un émula
 - Sequelize ORM
 - SQLite (développement)
 - Node.js
+
+## Screenshots
+
+Voici quelques captures d'écran de l'application :
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+  <img src="assets/images/sreenshoot/screen-1.png" alt="Écran d'accueil" width="250" />
+  <img src="assets/images/sreenshoot/screen-2.png" alt="Liste des tâches" width="250" />
+  <img src="assets/images/sreenshoot/screen-3.png" alt="Détails d'une tâche" width="250" />
+</div>
