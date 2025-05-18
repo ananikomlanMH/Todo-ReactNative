@@ -53,7 +53,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   const getCardClass = () => {
-    let baseClass = `overflow-hidden mb-4 ${getRoundedClass()}`;
+    let baseClass = `overflow-hidden ${getRoundedClass()}`;
     
     switch (variant) {
       case 'elevated':

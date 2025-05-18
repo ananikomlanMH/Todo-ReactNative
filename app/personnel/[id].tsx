@@ -15,7 +15,6 @@ export default function PersonnelDetails() {
   const [personnel, setPersonnel] = useState<Personnel | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filter, setFilter] = useState<TaskFilter>('all');
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadPersonnelWithTasks();
@@ -40,34 +39,7 @@ export default function PersonnelDetails() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!personnel) return;
-
-    Alert.alert(
-      'Confirmation',
-      `Êtes-vous sûr de vouloir supprimer ${personnel.prenom} ${personnel.nom} ? Toutes les tâches associées seront également supprimées.`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            try {
-              await personnelApi.delete(parseInt(id!));
-              Alert.alert('Succès', 'Le membre du personnel a été supprimé avec succès');
-              router.back();
-            } catch (error) {
-              console.error('Erreur lors de la suppression du personnel:', error);
-              Alert.alert('Erreur', 'Impossible de supprimer le membre du personnel');
-            } finally {
-              setDeleting(false);
-            }
-          }
-        }
-      ]
-    );
-  };
+  // handleDelete function moved to AppBar dropdown menu in _layout.tsx
 
   const getFilteredTasks = () => {
     if (filter === 'completed') {
@@ -82,7 +54,7 @@ export default function PersonnelDetails() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-gray-50">
+      <View className="flex-1 justify-center items-center bg-white">
         <ActivityIndicator size="large" color="#287aea" />
         <Text className="font-rubik mt-4 text-gray-600">Chargement des détails...</Text>
       </View>
@@ -144,25 +116,7 @@ export default function PersonnelDetails() {
             )}
           </View>
 
-          <View className="flex-row mt-4 space-x-3">
-            <View className="flex-1">
-              <Button
-                title="Modifier"
-                onPress={() => router.push(`/personnel/edit/${personnel.id}`)}
-                variant="secondary"
-                fullWidth
-              />
-            </View>
-            <View className="flex-1">
-              <Button
-                title="Supprimer"
-                onPress={handleDelete}
-                variant="danger"
-                loading={deleting}
-                fullWidth
-              />
-            </View>
-          </View>
+          {/* Action buttons moved to dropdown menu in AppBar */}
         </Card>
 
         {/* Tâches du personnel */}

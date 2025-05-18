@@ -1,4 +1,3 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
@@ -8,12 +7,22 @@ import Button from '../ui/Button';
 import FormField from '../ui/FormField';
 import SelectField from '../ui/SelectField';
 
+/**
+ * Props du composant TaskForm
+ * @property {Task} task - Tâche existante à modifier (optionnel)
+ * @property {number} personnelId - ID du personnel à pré-sélectionner (optionnel)
+ * @property {Function} onSuccess - Callback appelé après la soumission réussie
+ */
 interface TaskFormProps {
   task?: Task;
   personnelId?: number;
   onSuccess?: () => void;
 }
 
+/**
+ * Formulaire de création/édition de tâche
+ * Permet de créer une nouvelle tâche ou de modifier une tâche existante
+ */
 const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -49,6 +58,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     loadPersonnels();
   }, [task, personnelId]);
 
+  /**
+   * Charge la liste du personnel depuis l'API
+   */
   const loadPersonnels = async () => {
     try {
       const data = await personnelApi.getAll();
@@ -59,6 +71,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     }
   };
 
+  /**
+   * Valide les données du formulaire avant soumission
+   * @returns {boolean} True si les données sont valides, sinon False
+   */
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -74,6 +90,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * Gère la soumission du formulaire
+   * Crée ou met à jour une tâche selon le contexte
+   */
   const handleSubmit = async () => {
     if (!validate()) return;
 
@@ -102,6 +122,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     }
   };
 
+  /**
+   * Met à jour un champ spécifique du formulaire
+   * @param {keyof Task} field - Clé du champ à mettre à jour
+   * @param {any} value - Nouvelle valeur du champ
+   */
   const handleChange = (field: keyof Task, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -109,6 +134,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     }
   };
 
+  /**
+   * Gère le changement de date dans le sélecteur de date
+   * @param {any} event - Événement du sélecteur de date
+   * @param {Date} selectedDate - Date sélectionnée (optionnelle)
+   */
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
@@ -116,6 +146,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     }
   };
 
+  /**
+   * Formate une date pour l'affichage
+   * @param {string} dateString - Chaîne de date ISO à formater (optionnelle)
+   * @returns {string} Date formatée ou chaîne vide si non définie
+   */
   const formatDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -156,25 +191,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
         numberOfLines={4}
         error={errors.description}
       />
-      
-      <View className="mb-4">
-        <FormField
-          label="Date d'échéance"
-          value={formatDate(formData.dateEcheance)}
-          onFocus={() => setShowDatePicker(true)}
-          placeholder="Sélectionner une date d'échéance"
-          editable={false}
-          error={errors.dateEcheance}
-        />
-        {showDatePicker && (
-          <DateTimePicker
-            value={formData.dateEcheance ? new Date(formData.dateEcheance) : new Date()}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        )}
-      </View>
+
+      <FormField
+        label="Date d'échéance"
+        value={formData.dateEcheance}
+        onChangeText={(value) => handleChange('dateEcheance', value)}
+        placeholder="Sélectionner une date d'échéance"
+        error={errors.dateEcheance}
+      />
 
       <SelectField
         label="Priorité"
@@ -194,9 +218,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
 
       <SelectField
         label="Assignée à"
-        options={personnels.map(p => ({ 
-          label: `${p.prenom} ${p.nom}`, 
-          value: p.id! 
+        options={personnels.map(p => ({
+          label: `${p.prenom} ${p.nom}`,
+          value: p.id!
         }))}
         value={formData.personnelId}
         onValueChange={(value) => handleChange('personnelId', value)}

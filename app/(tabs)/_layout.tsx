@@ -1,7 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
-// Layout pour la navigation par onglets
+/**
+ * Layout principal pour la navigation par onglets
+ * Définit la structure et l'apparence de la barre de navigation inférieure
+ */
 export default function TabsLayout() {
 
   return (
@@ -27,29 +30,29 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
-          title: "Accueil",
+          title: "Tableau de bord",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
+            <Ionicons name="grid-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="personnel"
+        name="personnel/index"
         options={{
-          title: "Personnel",
+          title: "Équipe",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people" size={size} color={color} />
+            <Ionicons name="people-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="tasks"
+        name="tasks/index"
         options={{
           title: "Tâches",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
+            <Ionicons name="checkbox-outline" size={size} color={color} />
           ),
         }}
       />

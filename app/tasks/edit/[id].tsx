@@ -33,7 +33,7 @@ export default function EditTask() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-gray-50">
+      <View className="flex-1 justify-center items-center bg-white">
         <ActivityIndicator size="large" color="#287aea" />
         <Text className="font-rubik mt-4 text-gray-600">Chargement des données...</Text>
       </View>

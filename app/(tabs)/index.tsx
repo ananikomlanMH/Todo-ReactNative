@@ -8,6 +8,10 @@ import Card from '../../components/ui/Card';
 import { personnelApi, taskApi } from '../../utils/api';
 import { Task } from '../../utils/types';
 
+/**
+ * Page d'accueil / Tableau de bord
+ * Affiche une vue d'ensemble des statistiques et des tâches récentes
+ */
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -23,6 +27,10 @@ export default function Home() {
     loadDashboardData();
   }, []);
 
+  /**
+   * Charge les données du tableau de bord depuis l'API
+   * Récupère les statistiques et les tâches récentes
+   */
   const loadDashboardData = async () => {
     setLoading(true);
     try {
@@ -44,9 +52,11 @@ export default function Home() {
       });
       
       // Récupérer les 5 tâches les plus récentes
-      const sortedTasks = [...tasksData].sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ).slice(0, 5);
+      const sortedTasks = [...tasksData].sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      }).slice(0, 5);
       
       setRecentTasks(sortedTasks);
     } catch (error) {
@@ -56,7 +66,27 @@ export default function Home() {
     }
   };
 
-  const StatCard = ({ title, value, icon, color, onPress }) => (
+  /**
+   * Composant pour afficher une carte de statistique
+   * @param {string} title - Titre de la statistique
+   * @param {number} value - Valeur numérique à afficher
+   * @param {string} icon - Nom de l'icône Ionicons
+   * @param {string} color - Classe CSS pour la couleur de fond de l'icône
+   * @param {Function} onPress - Fonction appelée lors du clic sur la carte
+   */
+  const StatCard = ({ 
+    title, 
+    value, 
+    icon, 
+    color, 
+    onPress 
+  }: { 
+    title: string; 
+    value: number; 
+    icon: string; 
+    color: string; 
+    onPress: () => void 
+  }) => (
     <TouchableOpacity 
       className={`bg-white rounded-md p-5 flex-1 min-w-[45%] border border-gray-100`}
       onPress={onPress}
@@ -75,7 +105,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-background">
+      <View className="flex-1 justify-center items-center bg-white">
         <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
         <ActivityIndicator size="large" color="#4F46E5" />
         <Text className="font-rubik-medium mt-4 text-text-secondary">Chargement du tableau de bord...</Text>

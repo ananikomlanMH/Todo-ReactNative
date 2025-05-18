@@ -3,8 +3,27 @@ import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, View } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { IoniconsName } from '../../utils/iconTypes';
 
+/**
+ * Composant Button personnalisable
+ * Fournit un bouton avec différentes variantes, tailles et états
+ */
 
-
+/**
+ * Props du composant Button
+ * @property {string} title - Texte à afficher sur le bouton
+ * @property {Function} onPress - Fonction à exécuter lors du clic
+ * @property {string} variant - Style du bouton (couleur thématique)
+ * @property {string} size - Taille du bouton
+ * @property {boolean} disabled - Désactive le bouton
+ * @property {boolean} loading - Affiche un indicateur de chargement
+ * @property {boolean} fullWidth - Étend le bouton sur toute la largeur
+ * @property {IoniconsName} icon - Nom de l'icône à afficher
+ * @property {string} iconPosition - Position de l'icône (gauche ou droite)
+ * @property {boolean} rounded - Applique des coins arrondis
+ * @property {boolean} elevated - Ajoute une ombre portée
+ * @property {boolean} outline - Style avec contour sans fond
+ * @property {string} className - Classes Tailwind additionnelles
+ */
 interface ButtonProps {
   title: string;
   onPress: () => void;
@@ -18,7 +37,7 @@ interface ButtonProps {
   rounded?: boolean;
   elevated?: boolean;
   outline?: boolean;
-  className?: string; // Ajout de la propriété className
+  className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -36,6 +55,10 @@ const Button: React.FC<ButtonProps> = ({
   outline = false,
   className = '',
 }) => {
+  /**
+   * Génère les classes Tailwind pour le style du bouton
+   * @returns {string} Classes Tailwind combinées
+   */
   const getButtonClass = () => {
     let baseClass = 'flex flex-row justify-center items-center';
     
@@ -129,6 +152,10 @@ const Button: React.FC<ButtonProps> = ({
     return baseClass;
   };
   
+  /**
+   * Génère les classes Tailwind pour le style du texte
+   * @returns {string} Classes Tailwind combinées
+   */
   const getTextClass = () => {
     let textClass = 'font-rubik-medium text-center';
     
@@ -180,12 +207,20 @@ const Button: React.FC<ButtonProps> = ({
     return textClass;
   };
   
+  /**
+   * Détermine la taille de l'icône en fonction de la taille du bouton
+   * @returns {number} Taille de l'icône en pixels
+   */
   const getIconSize = () => {
     if (size === 'small') return 16;
     if (size === 'medium') return 18;
     return 20; // large
   };
   
+  /**
+   * Détermine la couleur de l'icône en fonction de la variante et du style
+   * @returns {string} Code couleur hexadécimal
+   */
   const getIconColor = () => {
     if (outline) {
       switch (variant) {
