@@ -1,4 +1,6 @@
-// Types pour le modèle Personnel
+/**
+ * Interface définissant la structure d'un membre du personnel
+ */
 export interface Personnel {
   id?: number;
   nom: string;
@@ -12,7 +14,9 @@ export interface Personnel {
   taches?: Task[];
 }
 
-// Types pour le modèle Task
+/**
+ * Interface définissant la structure d'une tâche
+ */
 export interface Task {
   id?: number;
   titre: string;
@@ -27,5 +31,10 @@ export interface Task {
   updatedAt?: string;
 }
 
-// Type pour les filtres de tâches
+/**
+ * Type définissant les options de filtrage des tâches
+ * - 'all' : Toutes les tâches
+ * - 'pending' : Tâches en cours
+ * - 'completed' : Tâches terminées
+ */
 export type TaskFilter = 'all' | 'pending' | 'completed';

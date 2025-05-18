@@ -42,7 +42,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
         return null;
     }
   };
-  
+
   const getPriorityColor = () => {
     switch (task.priorite) {
       case 'haute':
@@ -60,7 +60,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
     if (task.realisee) {
       return <Badge text="Terminée" variant="success" />;
     }
-    
+
     switch (task.statut) {
       case 'en cours':
         return <Badge text="En cours" variant="info" />;
@@ -88,12 +88,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
       className="bg-white rounded-md  mb-4 overflow-hidden border border-gray-200"
       style={{ elevation: 2 }}
     >
-      {/* Indicateur de priorité */}
+      {/* Barre de couleur indiquant le niveau de priorité */}
       <View 
         className="h-1.5 w-full" 
         style={{ backgroundColor: getPriorityColor() }}
       />
-      
+
       <View className="p-4">
         <View className="flex-row items-start">
           <TouchableOpacity 
@@ -106,7 +106,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
           >
             {task.realisee && <Ionicons name="checkmark" size={16} color="white" />}
           </TouchableOpacity>
-          
+
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
               <Text 
@@ -116,7 +116,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
               >
                 {task.titre}
               </Text>
-              
+
               <View 
                 className={`px-2 py-0.5 rounded-full ${
                   task.realisee ? 'bg-success/10' : 'bg-primary/10'
@@ -131,7 +131,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
                 </Text>
               </View>
             </View>
-            
+
             {task.description && (
               <Text 
                 className={`font-rubik text-sm mt-1 ${task.realisee ? 'text-gray-400' : 'text-text-secondary'}`} 
@@ -140,7 +140,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
                 {task.description}
               </Text>
             )}
-            
+
             <View className="flex-row justify-between items-center mt-4">
               <View className="flex-row items-center">
                 {task.dateEcheance && (
@@ -153,7 +153,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
                     </Text>
                   </View>
                 )}
-                
+
                 {task.personnel && (
                   <View className="flex-row items-center">
                     <View className="h-6 w-6 rounded-full bg-secondary/10 items-center justify-center mr-1">
@@ -165,7 +165,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onUpdate }) => {
                   </View>
                 )}
               </View>
-              
+
               <View 
                 className={`px-2 py-0.5 rounded-full`}
                 style={{ backgroundColor: `${getPriorityColor()}20` }}

@@ -34,7 +34,7 @@ const FormField: React.FC<FormFieldProps> = ({
         numberOfLines={numberOfLines}
         {...rest}
       />
-      {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
+      {error && <Text className="text-red-500 font-rubik text-sm mt-1">{error}</Text>}
     </View>
   );
 };

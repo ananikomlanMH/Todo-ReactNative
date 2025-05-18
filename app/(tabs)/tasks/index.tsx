@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import TaskCard from '../../../components/tasks/TaskCard';
 import Button from '../../../components/ui/Button';
@@ -26,6 +26,13 @@ export default function TaskList() {
     loadData();
   }, []);
 
+  // Refresh data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
+
   useEffect(() => {
     filterTasks();
   }, [searchQuery, filter, selectedPersonnelId, tasks]);
@@ -33,11 +40,8 @@ export default function TaskList() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Charger les tâches
       const tasksData = await taskApi.getAll();
       setTasks(tasksData);
-      
-      // Charger le personnel pour le filtre
       const personnelData = await personnelApi.getAll();
       setPersonnel(personnelData);
     } catch (error) {
@@ -50,20 +54,20 @@ export default function TaskList() {
 
   const filterTasks = () => {
     let filtered = [...tasks];
-    
-    // Filtrer par statut
+
+    // Application du filtre de statut (terminée/en cours)
     if (filter === 'completed') {
       filtered = filtered.filter(task => task.realisee);
     } else if (filter === 'pending') {
       filtered = filtered.filter(task => !task.realisee);
     }
-    
-    // Filtrer par personnel
+
+    // Application du filtre par membre du personnel
     if (selectedPersonnelId) {
       filtered = filtered.filter(task => task.personnelId === selectedPersonnelId);
     }
-    
-    // Filtrer par recherche
+
+    // Application du filtre de recherche textuelle
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -72,7 +76,7 @@ export default function TaskList() {
           (task.description && task.description.toLowerCase().includes(query))
       );
     }
-    
+
     setFilteredTasks(filtered);
   };
 
@@ -107,7 +111,7 @@ export default function TaskList() {
             </TouchableOpacity>
           )}
         </View>
-        
+
       </View>
 
       <View className="flex-row mb-4 bg-white shadow-sm border-b border-gray-100">

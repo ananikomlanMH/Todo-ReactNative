@@ -16,4 +16,8 @@ export type IoniconsName =
   | 'cut' | 'clipboard' | 'document' | 'folder' | 'funnel' 
   | 'options' | 'more' | 'ellipsis-vertical' | 'ellipsis-horizontal' 
   | 'calendar-outline' | 'person-outline' | 'people-outline' 
-  | 'time-outline' | 'alarm-outline';
+  | 'time-outline' | 'alarm-outline'
+  | 'settings-outline' | 'business-outline' | 'document-outline'
+  | 'alert-circle-outline' | 'mail-outline' | 'call-outline'
+  | 'refresh-outline' | 'grid-outline' | 'checkbox-outline'
+  | 'create-outline' | 'trash-outline';

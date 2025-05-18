@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import PersonnelCard from '../../../components/personnel/PersonnelCard';
 import Button from '../../../components/ui/Button';
@@ -18,6 +18,13 @@ export default function PersonnelList() {
   useEffect(() => {
     loadPersonnel();
   }, []);
+
+  // Refresh data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadPersonnel();
+    }, [])
+  );
 
   useEffect(() => {
     if (searchQuery.trim() === '') {

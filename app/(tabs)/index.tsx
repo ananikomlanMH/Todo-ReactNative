@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import TaskCard from '../../components/tasks/TaskCard';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import StatCard from '../../components/ui/StatCard';
 import { personnelApi, taskApi } from '../../utils/api';
 import { Task } from '../../utils/types';
 
@@ -23,85 +24,56 @@ export default function Home() {
   });
   const [recentTasks, setRecentTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
   /**
    * Charge les données du tableau de bord depuis l'API
    * Récupère les statistiques et les tâches récentes
    */
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     setLoading(true);
     try {
       // Charger les données du personnel
       const personnelData = await personnelApi.getAll();
-            
+
       // Charger toutes les tâches
       const tasksData = await taskApi.getAll();
-      
+
       // Calculer les statistiques
       const completedTasks = tasksData.filter(task => task.realisee);
       const pendingTasks = tasksData.filter(task => !task.realisee);
-      
+
       setStats({
         totalPersonnel: personnelData.length,
         totalTasks: tasksData.length,
         completedTasks: completedTasks.length,
         pendingTasks: pendingTasks.length
       });
-      
+
       // Récupérer les 5 tâches les plus récentes
       const sortedTasks = [...tasksData].sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
         const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
         return dateB - dateA;
       }).slice(0, 5);
-      
+
       setRecentTasks(sortedTasks);
     } catch (error) {
       console.error('Erreur lors du chargement des données du tableau de bord:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  /**
-   * Composant pour afficher une carte de statistique
-   * @param {string} title - Titre de la statistique
-   * @param {number} value - Valeur numérique à afficher
-   * @param {string} icon - Nom de l'icône Ionicons
-   * @param {string} color - Classe CSS pour la couleur de fond de l'icône
-   * @param {Function} onPress - Fonction appelée lors du clic sur la carte
-   */
-  const StatCard = ({ 
-    title, 
-    value, 
-    icon, 
-    color, 
-    onPress 
-  }: { 
-    title: string; 
-    value: number; 
-    icon: string; 
-    color: string; 
-    onPress: () => void 
-  }) => (
-    <TouchableOpacity 
-      className={`bg-white rounded-md p-5 flex-1 min-w-[45%] border border-gray-100`}
-      onPress={onPress}
-      activeOpacity={0.7}
-      style={{ elevation: 3 }}
-    >
-      <View className="flex-row items-center justify-between mb-2">
-        <View className={`h-12 w-12 rounded-full ${color} items-center justify-center shadow-sm`}>
-          <Ionicons name={icon} size={22} color="white" />
-        </View>
-        <Text className="font-rubik-bold text-3xl text-gray-800">{value}</Text>
-      </View>
-      <Text className="font-rubik-medium text-gray-600 mt-2">{title}</Text>
-    </TouchableOpacity>
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // Refresh data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadDashboardData();
+    }, [loadDashboardData])
   );
+
 
   if (loading) {
     return (
@@ -116,7 +88,6 @@ export default function Home() {
   return (
     <View className="flex-1 bg-white">
       <ScrollView className="flex-1">
-        {/* En-tête avec dégradé - sans AppBar car géré par la navigation */}
         <View className="bg-primary pt-5 pb-6 shadow-md">
           <View className="px-6">
             <View className="flex-row justify-between items-center mb-4">
@@ -136,7 +107,7 @@ export default function Home() {
                 </TouchableOpacity>
               </View>
             </View>
-            
+
             <View className="bg-white/10 p-4 rounded-xl mb-2">
               <View className="flex-row justify-between">
                 <View>
@@ -149,7 +120,7 @@ export default function Home() {
                   <Ionicons name="checkmark-circle" size={24} color="white" />
                 </View>
               </View>
-              
+
               {/* Barre de progression */}
               <View className="h-2 bg-white/20 rounded-full mt-4 overflow-hidden">
                 <View 
@@ -160,7 +131,7 @@ export default function Home() {
             </View>
           </View>
         </View>
-      
+
         <View className="px-5 pt-6">
           {/* Statistiques */}
           <View className="flex-row flex-wrap justify-between gap-4 mb-8">
@@ -186,7 +157,7 @@ export default function Home() {
               onPress={() => router.push('/tasks?filter=pending')}
             />
           </View>
-          
+
           {/* Tâches récentes */}
           <View className="mb-6">
             <View className="flex-row justify-between items-center mb-4">
@@ -199,9 +170,9 @@ export default function Home() {
                 <Ionicons name="chevron-forward" size={16} color="#4F46E5" />
               </TouchableOpacity>
             </View>
-            
+
             {recentTasks.length > 0 ? (
-              recentTasks.map((task: Task) => (
+              recentTasks.map((task) => (
                 <TaskCard 
                   key={task.id} 
                   task={task} 

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import TaskCard from '../../components/tasks/TaskCard';
 import Button from '../../components/ui/Button';
@@ -16,11 +16,7 @@ export default function PersonnelDetails() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filter, setFilter] = useState<TaskFilter>('all');
 
-  useEffect(() => {
-    loadPersonnelWithTasks();
-  }, [id]);
-
-  const loadPersonnelWithTasks = async () => {
+  const loadPersonnelWithTasks = useCallback(async () => {
     if (!id) return;
 
     setLoading(true);
@@ -37,9 +33,18 @@ export default function PersonnelDetails() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  // handleDelete function moved to AppBar dropdown menu in _layout.tsx
+  useEffect(() => {
+    loadPersonnelWithTasks();
+  }, [loadPersonnelWithTasks]);
+
+  // Refresh data when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadPersonnelWithTasks();
+    }, [loadPersonnelWithTasks])
+  );
 
   const getFilteredTasks = () => {
     if (filter === 'completed') {
@@ -69,7 +74,7 @@ export default function PersonnelDetails() {
           Personnel non trouvé
         </Text>
         <Text className="font-rubik text-gray-600 text-center mt-2 mb-6">
-          Le membre du personnel que vous recherchez n'existe pas ou a été supprimé.
+          Le membre du personnel que vous recherchez n&apos;existe pas ou a été supprimé.
         </Text>
         <Button title="Retour" onPress={() => router.back()} variant="primary" />
       </View>

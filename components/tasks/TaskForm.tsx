@@ -82,6 +82,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
       newErrors.titre = 'Le titre est obligatoire';
     }
 
+    if (!formData.dateEcheance) {
+      newErrors.dateEcheance = 'Veuillez sélectionner une date d\'echeance';
+    }
+
     if (!formData.personnelId) {
       newErrors.personnelId = 'Veuillez sélectionner un membre du personnel';
     }
@@ -132,33 +136,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, personnelId, onSuccess }) => 
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
-  };
-
-  /**
-   * Gère le changement de date dans le sélecteur de date
-   * @param {any} event - Événement du sélecteur de date
-   * @param {Date} selectedDate - Date sélectionnée (optionnelle)
-   */
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      handleChange('dateEcheance', selectedDate.toISOString());
-    }
-  };
-
-  /**
-   * Formate une date pour l'affichage
-   * @param {string} dateString - Chaîne de date ISO à formater (optionnelle)
-   * @returns {string} Date formatée ou chaîne vide si non définie
-   */
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   };
 
   const priorityOptions = [

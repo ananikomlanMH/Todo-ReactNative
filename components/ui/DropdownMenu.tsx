@@ -1,17 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IoniconsName } from '../../utils/iconTypes';
 
 /**
  * Type définissant un élément du menu déroulant
  * @property {string} label - Texte à afficher pour l'option
- * @property {string} icon - Nom de l'icône Ionicons à afficher
+ * @property {IoniconsName} icon - Nom de l'icône Ionicons à afficher
  * @property {Function} onPress - Fonction à exécuter lors du clic
  * @property {string} variant - Variante de style (défaut ou danger)
  */
 export type DropdownMenuItem = {
   label: string;
-  icon: string;
+  icon: IoniconsName;
   onPress: () => void;
   variant?: 'default' | 'danger';
 };
@@ -31,7 +32,7 @@ type DropdownMenuProps = {
  */
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ items }) => {
   const [visible, setVisible] = useState(false);
-  
+
   /**
    * Bascule l'affichage du menu
    */
@@ -79,7 +80,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ items }) => {
                 }}
               >
                 <Ionicons 
-                  name={item.icon as any} 
+                  name={item.icon as any}
                   size={20} 
                   color={item.variant === 'danger' ? '#EF4444' : '#6B7280'} 
                 />

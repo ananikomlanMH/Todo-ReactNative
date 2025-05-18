@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Text, View } from 'react-native';
 import TaskForm from '../../../components/tasks/TaskForm';
 import { taskApi } from '../../../utils/api';
@@ -11,13 +11,9 @@ export default function EditTask() {
   const [loading, setLoading] = useState(true);
   const [task, setTask] = useState<Task | null>(null);
 
-  useEffect(() => {
-    loadTask();
-  }, [id]);
-
-  const loadTask = async () => {
+  const loadTask = useCallback(async () => {
     if (!id) return;
-    
+
     setLoading(true);
     try {
       const data = await taskApi.getById(parseInt(id));
@@ -29,7 +25,11 @@ export default function EditTask() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, router]);
+
+  useEffect(() => {
+    loadTask();
+  }, [loadTask]);
 
   if (loading) {
     return (
@@ -47,7 +47,7 @@ export default function EditTask() {
           Tâche non trouvée
         </Text>
         <Text className="font-rubik text-gray-600 text-center mb-6">
-          La tâche que vous souhaitez modifier n'existe pas ou a été supprimée.
+          La tâche que vous souhaitez modifier n&apos;existe pas ou a été supprimée.
         </Text>
       </View>
     );

@@ -1,22 +1,19 @@
-import { mockPersonnel, mockTasks, mockUtils } from './mockData';
 import { Personnel, Task } from './types';
 
-// API configuration
-let API_URL: string;
+/**
+ * Configuration de l'API
+ */
+let API_URL: string = 'http://localhost:8080/api';
 
-API_URL = 'http://localhost:8080/api';
-
-const USE_MOCK_DATA = false;
-
-// Fonctions d'API pour le personnel
+/**
+ * API pour la gestion des membres du personnel
+ */
 export const personnelApi = {
-  // Récupérer tous les membres du personnel
+  /**
+   * Récupère la liste complète des membres du personnel
+   * @returns Une promesse contenant un tableau de membres du personnel
+   */
   getAll: async (): Promise<Personnel[]> => {
-    if (USE_MOCK_DATA) {
-      console.log('Utilisation des données fictives pour le personnel');
-      return mockPersonnel;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels`);
       return await response.json();
@@ -26,17 +23,12 @@ export const personnelApi = {
     }
   },
 
-  // Récupérer un membre du personnel par ID
+  /**
+   * Récupère un membre du personnel par son identifiant
+   * @param id - L'identifiant du membre du personnel
+   * @returns Une promesse contenant les données du membre du personnel
+   */
   getById: async (id: number): Promise<Personnel> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour le personnel ${id}`);
-      const personnel = mockPersonnel.find(p => p.id === id);
-      if (!personnel) {
-        throw new Error(`Personnel avec l'ID ${id} non trouvé`);
-      }
-      return personnel;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels/${id}`);
       return await response.json();
@@ -46,21 +38,12 @@ export const personnelApi = {
     }
   },
 
-  // Récupérer un membre du personnel avec ses tâches
+  /**
+   * Récupère un membre du personnel avec la liste de ses tâches associées
+   * @param id - L'identifiant du membre du personnel
+   * @returns Une promesse contenant les données du membre du personnel incluant ses tâches
+   */
   getWithTasks: async (id: number): Promise<Personnel> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour le personnel ${id} avec ses tâches`);
-      const personnel = mockPersonnel.find(p => p.id === id);
-      if (!personnel) {
-        throw new Error(`Personnel avec l'ID ${id} non trouvé`);
-      }
-      
-      // Ajouter les tâches au personnel
-      const personnelWithTasks = { ...personnel };
-      personnelWithTasks.taches = mockUtils.getTasksByPersonnelId(id);
-      return personnelWithTasks;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels/${id}/tasks`);
       return await response.json();
@@ -70,27 +53,12 @@ export const personnelApi = {
     }
   },
 
-  // Créer un nouveau membre du personnel
+  /**
+   * Crée un nouveau membre du personnel
+   * @param personnel - Les données du membre du personnel à créer
+   * @returns Une promesse contenant les données du membre du personnel créé
+   */
   create: async (personnel: Partial<Personnel>): Promise<Personnel> => {
-    if (USE_MOCK_DATA) {
-      console.log('Utilisation des données fictives pour créer un personnel');
-      // Simuler la création d'un nouveau personnel
-      const newId = Math.max(...mockPersonnel.map(p => p.id || 0)) + 1;
-      const newPersonnel: Personnel = {
-        id: newId,
-        nom: personnel.nom || '',
-        prenom: personnel.prenom || '',
-        email: personnel.email || '',
-        telephone: personnel.telephone,
-        poste: personnel.poste,
-        departement: personnel.departement,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      mockPersonnel.push(newPersonnel);
-      return newPersonnel;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels`, {
         method: 'POST',
@@ -106,25 +74,13 @@ export const personnelApi = {
     }
   },
 
-  // Mettre à jour un membre du personnel
+  /**
+   * Met à jour les informations d'un membre du personnel existant
+   * @param id - L'identifiant du membre du personnel à mettre à jour
+   * @param personnel - Les nouvelles données du membre du personnel
+   * @returns Une promesse contenant les données du membre du personnel mis à jour
+   */
   update: async (id: number, personnel: Partial<Personnel>): Promise<Personnel> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour mettre à jour le personnel ${id}`);
-      const index = mockPersonnel.findIndex(p => p.id === id);
-      if (index === -1) {
-        throw new Error(`Personnel avec l'ID ${id} non trouvé`);
-      }
-      
-      // Mettre à jour le personnel
-      mockPersonnel[index] = {
-        ...mockPersonnel[index],
-        ...personnel,
-        updatedAt: new Date().toISOString()
-      };
-      
-      return mockPersonnel[index];
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels/${id}`, {
         method: 'PUT',
@@ -140,21 +96,12 @@ export const personnelApi = {
     }
   },
 
-  // Supprimer un membre du personnel
+  /**
+   * Supprime un membre du personnel
+   * @param id - L'identifiant du membre du personnel à supprimer
+   * @returns Une promesse contenant un objet indiquant le succès de l'opération
+   */
   delete: async (id: number): Promise<{ success: boolean }> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour supprimer le personnel ${id}`);
-      const index = mockPersonnel.findIndex(p => p.id === id);
-      if (index === -1) {
-        throw new Error(`Personnel avec l'ID ${id} non trouvé`);
-      }
-      
-      // Supprimer le personnel
-      mockPersonnel.splice(index, 1);
-      
-      return { success: true };
-    }
-    
     try {
       const response = await fetch(`${API_URL}/personnels/${id}`, {
         method: 'DELETE',
@@ -167,15 +114,15 @@ export const personnelApi = {
   },
 };
 
-// Fonctions d'API pour les tâches
+/**
+ * API pour la gestion des tâches
+ */
 export const taskApi = {
-  // Récupérer toutes les tâches
+  /**
+   * Récupère la liste complète des tâches
+   * @returns Une promesse contenant un tableau de tâches
+   */
   getAll: async (): Promise<Task[]> => {
-    if (USE_MOCK_DATA) {
-      console.log('Utilisation des données fictives pour les tâches');
-      return mockTasks;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks`);
       return await response.json();
@@ -185,17 +132,12 @@ export const taskApi = {
     }
   },
 
-  // Récupérer une tâche par ID
+  /**
+   * Récupère une tâche par son identifiant
+   * @param id - L'identifiant de la tâche
+   * @returns Une promesse contenant les données de la tâche
+   */
   getById: async (id: number): Promise<Task> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour la tâche ${id}`);
-      const task = mockTasks.find(t => t.id === id);
-      if (!task) {
-        throw new Error(`Tâche avec l'ID ${id} non trouvée`);
-      }
-      return task;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`);
       return await response.json();
@@ -205,13 +147,12 @@ export const taskApi = {
     }
   },
 
-  // Récupérer toutes les tâches d'un membre du personnel
+  /**
+   * Récupère toutes les tâches assignées à un membre du personnel spécifique
+   * @param personnelId - L'identifiant du membre du personnel
+   * @returns Une promesse contenant un tableau des tâches du membre du personnel
+   */
   getByPersonnel: async (personnelId: number): Promise<Task[]> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour les tâches du personnel ${personnelId}`);
-      return mockUtils.getTasksByPersonnelId(personnelId);
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/personnel/${personnelId}`);
       return await response.json();
@@ -221,13 +162,12 @@ export const taskApi = {
     }
   },
 
-  // Récupérer les tâches réalisées d'un membre du personnel
+  /**
+   * Récupère les tâches terminées d'un membre du personnel spécifique
+   * @param personnelId - L'identifiant du membre du personnel
+   * @returns Une promesse contenant un tableau des tâches terminées du membre du personnel
+   */
   getCompletedByPersonnel: async (personnelId: number): Promise<Task[]> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour les tâches réalisées du personnel ${personnelId}`);
-      return mockUtils.getCompletedTasksByPersonnelId(personnelId);
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/personnel/${personnelId}/completed`);
       return await response.json();
@@ -237,13 +177,12 @@ export const taskApi = {
     }
   },
 
-  // Récupérer les tâches non réalisées d'un membre du personnel
+  /**
+   * Récupère les tâches en cours (non terminées) d'un membre du personnel spécifique
+   * @param personnelId - L'identifiant du membre du personnel
+   * @returns Une promesse contenant un tableau des tâches en cours du membre du personnel
+   */
   getPendingByPersonnel: async (personnelId: number): Promise<Task[]> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour les tâches non réalisées du personnel ${personnelId}`);
-      return mockUtils.getPendingTasksByPersonnelId(personnelId);
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/personnel/${personnelId}/pending`);
       return await response.json();
@@ -253,37 +192,12 @@ export const taskApi = {
     }
   },
 
-  // Créer une nouvelle tâche
+  /**
+   * Crée une nouvelle tâche
+   * @param task - Les données de la tâche à créer
+   * @returns Une promesse contenant les données de la tâche créée
+   */
   create: async (task: Partial<Task>): Promise<Task> => {
-    if (USE_MOCK_DATA) {
-      console.log('Utilisation des données fictives pour créer une tâche');
-      // Simuler la création d'une nouvelle tâche
-      const newId = Math.max(...mockTasks.map(t => t.id || 0)) + 1;
-      const newTask: Task = {
-        id: newId,
-        titre: task.titre || '',
-        description: task.description || '',
-        dateEcheance: task.dateEcheance,
-        priorite: task.priorite,
-        statut: task.statut || 'à faire',
-        realisee: task.realisee || false,
-        personnelId: task.personnelId || 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      
-      // Ajouter les informations du personnel si disponibles
-      if (task.personnelId) {
-        const personnel = mockPersonnel.find(p => p.id === task.personnelId);
-        if (personnel) {
-          newTask.personnel = personnel;
-        }
-      }
-      
-      mockTasks.push(newTask);
-      return newTask;
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks`, {
         method: 'POST',
@@ -299,33 +213,13 @@ export const taskApi = {
     }
   },
 
-  // Mettre à jour une tâche
+  /**
+   * Met à jour les informations d'une tâche existante
+   * @param id - L'identifiant de la tâche à mettre à jour
+   * @param task - Les nouvelles données de la tâche
+   * @returns Une promesse contenant les données de la tâche mise à jour
+   */
   update: async (id: number, task: Partial<Task>): Promise<Task> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour mettre à jour la tâche ${id}`);
-      const index = mockTasks.findIndex(t => t.id === id);
-      if (index === -1) {
-        throw new Error(`Tâche avec l'ID ${id} non trouvée`);
-      }
-      
-      // Mettre à jour la tâche
-      mockTasks[index] = {
-        ...mockTasks[index],
-        ...task,
-        updatedAt: new Date().toISOString()
-      };
-      
-      // Mettre à jour les informations du personnel si nécessaire
-      if (task.personnelId && task.personnelId !== mockTasks[index].personnelId) {
-        const personnel = mockPersonnel.find(p => p.id === task.personnelId);
-        if (personnel) {
-          mockTasks[index].personnel = personnel;
-        }
-      }
-      
-      return mockTasks[index];
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
         method: 'PUT',
@@ -341,26 +235,12 @@ export const taskApi = {
     }
   },
 
-  // Marquer une tâche comme réalisée
+  /**
+   * Marque une tâche comme terminée
+   * @param id - L'identifiant de la tâche à marquer comme terminée
+   * @returns Une promesse contenant les données de la tâche mise à jour
+   */
   markAsCompleted: async (id: number): Promise<Task> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour marquer la tâche ${id} comme réalisée`);
-      const index = mockTasks.findIndex(t => t.id === id);
-      if (index === -1) {
-        throw new Error(`Tâche avec l'ID ${id} non trouvée`);
-      }
-      
-      // Marquer la tâche comme réalisée
-      mockTasks[index] = {
-        ...mockTasks[index],
-        realisee: true,
-        statut: 'terminée',
-        updatedAt: new Date().toISOString()
-      };
-      
-      return mockTasks[index];
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/${id}/complete`, {
         method: 'PUT',
@@ -372,21 +252,12 @@ export const taskApi = {
     }
   },
 
-  // Supprimer une tâche
+  /**
+   * Supprime une tâche
+   * @param id - L'identifiant de la tâche à supprimer
+   * @returns Une promesse contenant un objet indiquant le succès de l'opération
+   */
   delete: async (id: number): Promise<{ success: boolean }> => {
-    if (USE_MOCK_DATA) {
-      console.log(`Utilisation des données fictives pour supprimer la tâche ${id}`);
-      const index = mockTasks.findIndex(t => t.id === id);
-      if (index === -1) {
-        throw new Error(`Tâche avec l'ID ${id} non trouvée`);
-      }
-      
-      // Supprimer la tâche
-      mockTasks.splice(index, 1);
-      
-      return { success: true };
-    }
-    
     try {
       const response = await fetch(`${API_URL}/tasks/${id}`, {
         method: 'DELETE',
