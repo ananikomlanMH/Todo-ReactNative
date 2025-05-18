@@ -81,19 +81,24 @@ Suivez les instructions dans le terminal pour ouvrir l'application sur un émula
 
 - `GET /api/personnels` : Liste de tout le personnel
 - `GET /api/personnels/:id` : Détails d'un membre du personnel
+- `GET /api/personnels/:id/tasks` : Détails d'un membre du personnel avec ses tâches
 - `POST /api/personnels` : Créer un nouveau membre du personnel
 - `PUT /api/personnels/:id` : Mettre à jour un membre du personnel
 - `DELETE /api/personnels/:id` : Supprimer un membre du personnel
+- `DELETE /api/personnels` : Supprimer tout le personnel
 
 ### Tâches
 
 - `GET /api/tasks` : Liste de toutes les tâches
 - `GET /api/tasks/:id` : Détails d'une tâche
 - `GET /api/tasks/personnel/:personnelId` : Tâches d'un membre du personnel
+- `GET /api/tasks/personnel/:personnelId/completed` : Tâches complétées d'un membre du personnel
+- `GET /api/tasks/personnel/:personnelId/pending` : Tâches en attente d'un membre du personnel
 - `POST /api/tasks` : Créer une nouvelle tâche
 - `PUT /api/tasks/:id` : Mettre à jour une tâche
-- `PUT /api/tasks/:id/toggle` : Basculer l'état de réalisation d'une tâche
+- `PUT /api/tasks/:id/complete` : Marquer une tâche comme réalisée
 - `DELETE /api/tasks/:id` : Supprimer une tâche
+- `DELETE /api/tasks` : Supprimer toutes les tâches
 
 ## Technologies Utilisées
 
@@ -107,12 +112,10 @@ Suivez les instructions dans le terminal pour ouvrir l'application sur un émula
 ### Backend
 - Express.js
 - Sequelize ORM
-- SQLite (développement)
+- MySQL (développement)
 - Node.js
 
 ## Screenshots
-
-Voici quelques captures d'écran de l'application :
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
   <img src="assets/images/sreenshoot/screen-1.png" alt="Écran d'accueil" width="250" />

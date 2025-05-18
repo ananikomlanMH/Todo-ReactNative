@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { AppBar } from "../../components/ui/AppBar";
 import ConfirmationModal from "../../components/ui/ConfirmationModal";
-import DropdownMenu, {DropdownMenuItem} from "../../components/ui/DropdownMenu";
+import DropdownMenu, { DropdownMenuItem } from "../../components/ui/DropdownMenu";
 import { personnelApi } from "../../utils/api";
 import { Personnel } from "../../utils/types";
 
