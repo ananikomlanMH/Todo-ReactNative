@@ -41,7 +41,7 @@ npm run db:init
 npm start
 ```
 
-Le serveur sera accessible à l'adresse : http://localhost:8080
+Le serveur sera accessible à l'adresse : http://localhost:8081
 
 ### Frontend (Todo-App)
 
